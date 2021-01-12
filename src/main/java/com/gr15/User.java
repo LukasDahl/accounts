@@ -1,5 +1,6 @@
 package com.gr15;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -14,7 +15,7 @@ public class User {
     }
 
     public User(){
-
+        this.account = new ArrayList<>();
     }
 
     public String getCprNumber() {

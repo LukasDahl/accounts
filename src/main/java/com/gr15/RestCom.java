@@ -1,8 +1,6 @@
 package com.gr15;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -38,6 +36,30 @@ public class RestCom {
         System.out.println(restCom.createUser(restCom.demoJson()));
     }
 
+
+    @GET
+    public JsonArray getUsers() {
+        JsonArrayBuilder usersBuild = Json.createArrayBuilder();
+        for(User user : dummyUsers) {
+            JsonObjectBuilder userBuild = Json.createObjectBuilder()
+                    .add("cprNumber", user.getCprNumber())
+                    .add("firstName", user.getFirstName())
+                    .add("lastName", user.getLastName());
+            JsonObject userJson = userBuild.build();
+
+            for(Account account : user.getAccount()) {
+                JsonObjectBuilder accountBuild = Json.createObjectBuilder()
+                        .add("type", account.type)
+                        .add("bankAccountId", account.getBankAccountId())
+                        .add("id", account.getId())
+                        .add("user", userJson);
+                usersBuild.add(accountBuild.build());
+
+            }
+        }
+
+        return usersBuild.build();
+    }
 
     @POST
     public String createUser(JsonObject jsonObject) {
@@ -77,6 +99,8 @@ public class RestCom {
 
         user.getAccount().add(new Account(type, bankAccountID));
         dummyUsers.add(user);
+
+        // todo publish user
 
         return "200";
     }
