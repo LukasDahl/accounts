@@ -1,10 +1,12 @@
 package com.gr15;
 
+import java.util.List;
+
 public class User {
     private String cprNumber, firstName, lastName;
-    private Account account;
+    private List<Account> account;
 
-    public User(String cprNumber, String firstName, String lastName, Account account){
+    public User(String cprNumber, String firstName, String lastName, List<Account> account){
         this.cprNumber = cprNumber;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,11 +41,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Account getAccount() {
+    public List<Account> getAccount() {
         return account;
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(List<Account> account) {
         this.account = account;
     }
 }

@@ -10,14 +10,18 @@ public class RestCom {
     private List<User> dummyUsers = new ArrayList<>();
 
     public RestCom(){
-        dummyUsers.add(new User("000000-0000", "Jonatan", "Jonatansen",
-                new Account("0", "costumer", "10")));
-        dummyUsers.add(new User("000000-0001", "Hans", "Hansen",
-                new Account("0", "costumer", "11")));
-        dummyUsers.add(new User("000000-0002", "Micheal", "Jordan",
-                new Account("0", "merchant", "12")));
-        dummyUsers.add(new User("000000-0003", "August", "Augustsen",
-                new Account("0", "costumer", "13")));
+        List<Account> user1 = new ArrayList<>();
+        List<Account> user3 = new ArrayList<>();
+        List<Account> user2 = new ArrayList<>();
+
+        user1.add(new Account("0", "Costumer", "10"));
+        user1.add(new Account("1", "Merchant", "11"));
+        user2.add(new Account("2", "Costumer", "12"));
+        user3.add(new Account("3", "Merchant", "13"));
+
+        dummyUsers.add(new User("000000-0000", "Jonatan", "Jonatansen", user1));
+        dummyUsers.add(new User("000000-0001", "August", "Augustsen", user2));
+        dummyUsers.add(new User("000000-0002", "Micheal", "Jordan", user3));
     }
 
     @POST
@@ -34,12 +38,13 @@ public class RestCom {
     }
 
     @DELETE
-    public String deleteUser(@PathParam(MediaType.APPLICATION_JSON) String userId) {
-
-
-
-
-
-        return "200";
+    public String deleteUser(@PathParam(MediaType.APPLICATION_JSON) String userCprNumber) {
+        for (int i = 0; i < dummyUsers.size(); i++) {
+            if (dummyUsers.get(i).getCprNumber().equals(userCprNumber)) {
+                dummyUsers.remove(i);
+                return "200";
+            }
+        }
+        return "404";
     }
 }
