@@ -9,6 +9,10 @@ public class User {
         this.lastName = lastName;
     }
 
+    public User(){
+
+    }
+
     public String getCprNumber() {
         return cprNumber;
     }

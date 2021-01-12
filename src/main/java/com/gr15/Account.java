@@ -9,6 +9,10 @@ public class Account {
         this.bankAccountId = bankAccountId;
     }
 
+    public Account(){
+
+    }
+
     public String getId() {
         return id;
     }
