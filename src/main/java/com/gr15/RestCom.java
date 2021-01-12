@@ -42,9 +42,13 @@ public class RestCom {
         for (int i = 0; i < dummyUsers.size(); i++) {
             if (dummyUsers.get(i).getCprNumber().equals(userCprNumber)) {
                 dummyUsers.remove(i);
-                return "200";
+                return "204";
             }
         }
         return "404";
+    }
+
+    public List<User> getDummyUsers() {
+        return dummyUsers;
     }
 }
