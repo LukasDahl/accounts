@@ -1,4 +1,4 @@
-package org.acme;
+package com.gr15;
 
 public class User {
     private String cprNumber, firstName, lastName;

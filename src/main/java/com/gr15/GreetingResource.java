@@ -1,4 +1,4 @@
-package org.acme;
+package com.gr15;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
