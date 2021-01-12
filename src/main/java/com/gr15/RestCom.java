@@ -1,11 +1,18 @@
 package com.gr15;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/hello-resteasy")
+@Path("/accounts")
 public class RestCom {
     private List<User> dummyUsers = new ArrayList<>();
 
@@ -24,18 +31,75 @@ public class RestCom {
         dummyUsers.add(new User("000000-0002", "Micheal", "Jordan", user3));
     }
 
+    public static void main(String[] args) {
+
+        RestCom restCom = new RestCom();
+
+        System.out.println(restCom.createUser(restCom.demoJson()));
+    }
+
+
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public String createUser() {
-
-
+    public String createUser(JsonObject jsonObject) {
 
         User user = new User();
+        String type, bankAccountID;
 
+        try {
+            user.setLastName(jsonObject.getJsonObject("user").get("lastName").toString());
+        } catch (NullPointerException e){
+            return "400 error: missing lastName";
+        }
 
+        try {
+            user.setFirstName(jsonObject.getJsonObject("user").get("firstName").toString());
+        } catch (NullPointerException e){
+            return "400 error: missing firstName";
+        }
 
-        return "Hello RESTEasy";
+        try {
+            user.setCprNumber(jsonObject.getJsonObject("user").get("cprNumber").toString());
+        } catch (NullPointerException e){
+            return "400 error: missing cprNumber";
+        }
+
+        try {
+            bankAccountID = jsonObject.get("bankAccountId").toString();
+        } catch (NullPointerException e){
+            return "400 error: missing bankAccountId";
+        }
+
+        try {
+            type = jsonObject.get("type").toString();
+        } catch (NullPointerException e){
+            return "400 error: missing type";
+        }
+
+        user.getAccount().add(new Account(type, bankAccountID));
+        dummyUsers.add(user);
+
+        return "200";
     }
+
+
+
+    public JsonObject demoJson(){
+        JsonObjectBuilder userBuild = Json.createObjectBuilder()
+                .add("cprNumber", "12345")
+                .add("firstName", "Bib")
+                .add("lastName", "Bob");
+        JsonObject user = userBuild.build();
+
+        JsonObjectBuilder account = Json.createObjectBuilder()
+                .add("type", "merchant")
+                .add("bankAccountId", "123aad")
+                .add("user", user);
+
+        return account.build();
+
+    }
+
+
 
     @DELETE
     public String deleteUser(@PathParam(MediaType.APPLICATION_JSON) String userCprNumber) {

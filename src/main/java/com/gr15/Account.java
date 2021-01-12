@@ -1,5 +1,7 @@
 package com.gr15;
 
+import java.util.UUID;
+
 public class Account {
     public String id, type, bankAccountId;
 
@@ -9,8 +11,10 @@ public class Account {
         this.bankAccountId = bankAccountId;
     }
 
-    public Account(){
-
+    public Account(String type, String bankAccountId){
+        this.id = UUID.randomUUID().toString();
+        this.type = type;
+        this.bankAccountId = bankAccountId;
     }
 
     public String getId() {
