@@ -105,7 +105,7 @@ public class RestCom {
 
         // todo publish user
 
-        return "200";
+        return "user created";
     }
 
 
