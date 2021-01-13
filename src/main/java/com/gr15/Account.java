@@ -3,25 +3,22 @@ package com.gr15;
 import java.util.UUID;
 
 public class Account {
-    public String id, type, bankAccountId;
+    private String type, bankAccountId;
+    private UUID id;
+    private User user;
 
-    public Account(String id, String type, String bankAccountId){
-        this.id = id;
+    public Account(String type, String bankAccountId, User user){
+        this.id = UUID.randomUUID();
         this.type = type;
         this.bankAccountId = bankAccountId;
+        this.user = user;
     }
 
-    public Account(String type, String bankAccountId){
-        this.id = UUID.randomUUID().toString();
-        this.type = type;
-        this.bankAccountId = bankAccountId;
-    }
-
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

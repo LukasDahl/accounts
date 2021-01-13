@@ -1,14 +1,9 @@
 package com.gr15.cucumber;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gr15.Account;
 import com.gr15.RestCom;
-import com.gr15.User;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
 
 import javax.json.*;
 
@@ -80,7 +75,7 @@ public class account {
 
     @When("the user deletes its account")
     public void deleteUser() {
-        restCom.deleteUser(user.getString("cprNumber"));
+        restCom.deleteAccount(user.getString("cprNumber"));
     }
 
     @Then("the client get a message saying {string}")
