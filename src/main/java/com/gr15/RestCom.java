@@ -46,22 +46,19 @@ public class RestCom {
     @GET
     public JsonArray getUsers() {
         JsonArrayBuilder usersBuild = Json.createArrayBuilder();
-        for(User user : dummyUsers) {
+        for(Account account : dummyAccounts.values()) {
             JsonObjectBuilder userBuild = Json.createObjectBuilder()
-                    .add("cprNumber", user.getCprNumber())
-                    .add("firstName", user.getFirstName())
-                    .add("lastName", user.getLastName());
+                    .add("cprNumber", account.getUser().getCprNumber())
+                    .add("firstName", account.getUser().getFirstName())
+                    .add("lastName", account.getUser().getLastName());
             JsonObject userJson = userBuild.build();
 
-            for(Account account : user.getAccount()) {
-                JsonObjectBuilder accountBuild = Json.createObjectBuilder()
-                        .add("type", account.type)
-                        .add("bankAccountId", account.getBankAccountId())
-                        .add("id", account.getId())
-                        .add("user", userJson);
-                usersBuild.add(accountBuild.build());
-
-            }
+            JsonObjectBuilder accountBuild = Json.createObjectBuilder()
+                    .add("type", account.getType())
+                    .add("bankAccountId", account.getBankAccountId())
+                    .add("id", account.getId().toString())
+                    .add("user", userJson);
+            usersBuild.add(accountBuild.build());
         }
 
         return usersBuild.build();
@@ -70,23 +67,22 @@ public class RestCom {
     @POST
     public String createUser(JsonObject jsonObject) {
 
-        User user = new User();
-        String type, bankAccountID;
+        String type, bankAccountID, cpr, first, last;
 
         try {
-            user.setLastName(jsonObject.getJsonObject("user").getString("lastName"));
+            last = jsonObject.getJsonObject("user").getString("lastName");
         } catch (NullPointerException e){
             return "400 error: missing lastName";
         }
 
         try {
-            user.setFirstName(jsonObject.getJsonObject("user").getString("firstName"));
+            first = jsonObject.getJsonObject("user").getString("firstName");
         } catch (NullPointerException e){
             return "400 error: missing firstName";
         }
 
         try {
-            user.setCprNumber(jsonObject.getJsonObject("user").getString("cprNumber"));
+            cpr = jsonObject.getJsonObject("user").getString("cprNumber");
         } catch (NullPointerException e){
             return "400 error: missing cprNumber";
         }
@@ -102,9 +98,9 @@ public class RestCom {
         } catch (NullPointerException e){
             return "400 error: missing type";
         }
-
-        user.getAccount().add(new Account(type, bankAccountID));
-        dummyUsers.add(user);
+        Account account = new Account(type, bankAccountID,
+                new User(cpr, first, last));
+        dummyAccounts.put(account.getId().toString(), account);
 
         // todo publish user
 
