@@ -71,31 +71,31 @@ public class RestCom {
         String type, bankAccountID;
 
         try {
-            user.setLastName(jsonObject.getJsonObject("user").get("lastName").toString());
+            user.setLastName(jsonObject.getJsonObject("user").getString("lastName"));
         } catch (NullPointerException e){
             return "400 error: missing lastName";
         }
 
         try {
-            user.setFirstName(jsonObject.getJsonObject("user").get("firstName").toString());
+            user.setFirstName(jsonObject.getJsonObject("user").getString("firstName"));
         } catch (NullPointerException e){
             return "400 error: missing firstName";
         }
 
         try {
-            user.setCprNumber(jsonObject.getJsonObject("user").get("cprNumber").toString());
+            user.setCprNumber(jsonObject.getJsonObject("user").getString("cprNumber"));
         } catch (NullPointerException e){
             return "400 error: missing cprNumber";
         }
 
         try {
-            bankAccountID = jsonObject.get("bankAccountId").toString();
+            bankAccountID = jsonObject.getString("bankAccountId");
         } catch (NullPointerException e){
             return "400 error: missing bankAccountId";
         }
 
         try {
-            type = jsonObject.get("type").toString();
+            type = jsonObject.getString("type");
         } catch (NullPointerException e){
             return "400 error: missing type";
         }
