@@ -1,9 +1,11 @@
 package com.gr15.cucumber;
 
+import com.gr15.Account;
 import com.gr15.RestCom;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 
 import javax.json.*;
 
@@ -15,6 +17,7 @@ public class account {
     JsonObject user, account;
     JsonArray accounts;
     String message;
+    int numberOfAccounts;
 
     @Given("a user with cpr {string} first name {string} last name {string} type {string} and bankAccountId {string}")
     public void newUser(String cpr, String first, String last, String type, String bank) {
@@ -124,5 +127,21 @@ public class account {
         }
 
         assertTrue(accountFound);
+    }
+
+    @Given("there are accounts in the database")
+    public void accountExists() {
+        numberOfAccounts = restCom.getDummyAccounts().size();
+        Assert.assertTrue(numberOfAccounts > 0);
+    }
+
+    @When("an account is deleted")
+    public void deleteAccount() {
+        Assert.assertEquals("204", restCom.deleteAccount("0"));
+    }
+
+    @Then("There should be one account less")
+    public void checkForOneLessAccount(){
+        Assert.assertTrue(numberOfAccounts > restCom.getDummyAccounts().size());
     }
 }
