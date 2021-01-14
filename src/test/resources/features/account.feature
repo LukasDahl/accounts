@@ -42,10 +42,3 @@ Feature: Account
     Given there are accounts in the database
     When an account is deleted
     Then There should be one account less
-
-  Scenario: CreateAndDelete
-    Given there is no account with id 69
-    When this account with id 69 is created
-    And it is checked in the database
-    And the account is deleted again
-    Then there should be the same number of accounts as before

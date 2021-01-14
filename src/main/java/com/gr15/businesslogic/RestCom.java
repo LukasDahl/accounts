@@ -13,34 +13,16 @@ import java.util.HashMap;
 
 @Path("/accounts")
 public class RestCom {
-    private HashMap<String, Account> dummyAccounts = new HashMap<>();
     private Account testAccount1, testAccount2, testAccount3;
 
     public RestCom(){
-        testAccount1 = new Account("Merchant", "0",
-                new User("000000-0000", "Jonatan", "Jonatansen"));
-        testAccount2 = new Account("Costumer", "1",
-                new User("000000-0001", "August", "Augustsen"));
-        testAccount3 = new Account("Costumer", "2",
-                new User("000000-0002", "Micheal", "Jordan"));
 
-        dummyAccounts.put(testAccount1.getId().toString(), testAccount1);
-        dummyAccounts.put(testAccount2.getId().toString(), testAccount2);
-        dummyAccounts.put(testAccount3.getId().toString(), testAccount3);
     }
-
-    public static void main(String[] args) {
-
-        RestCom restCom = new RestCom();
-
-        System.out.println(restCom.createUser(restCom.demoJson()));
-    }
-
 
     @GET
-    public JsonArray getUsers() {
+    public JsonArray getUsers(HashMap<String, Account> accounts) {
         JsonArrayBuilder usersBuild = Json.createArrayBuilder();
-        for(Account account : dummyAccounts.values()) {
+        for(Account account : accounts.values()) {
             JsonObjectBuilder userBuild = Json.createObjectBuilder()
                     .add("cprNumber", account.getUser().getCprNumber())
                     .add("firstName", account.getUser().getFirstName())
@@ -59,7 +41,7 @@ public class RestCom {
     }
 
     @POST
-    public String createUser(JsonObject jsonObject) {
+    public String createUser(JsonObject jsonObject, HashMap<String, Account> accounts) {
 
         String type, bankAccountID, cpr, first, last;
 
@@ -94,14 +76,12 @@ public class RestCom {
         }
         Account account = new Account(type, bankAccountID,
                 new User(cpr, first, last));
-        dummyAccounts.put(account.getId().toString(), account);
+        accounts.put(account.getId().toString(), account);
 
         // todo publish user
 
         return "user created";
     }
-
-
 
     public JsonObject demoJson(){
         JsonObjectBuilder userBuild = Json.createObjectBuilder()
@@ -119,16 +99,10 @@ public class RestCom {
 
     }
 
-
-
     @DELETE
-    public String deleteAccount(String accountId) {
-        if(dummyAccounts.remove(accountId) != null)
+    public String deleteAccount(String accountId, HashMap<String, Account> accounts) {
+        if(accounts.remove(accountId) != null)
             return "204";
         return "404";
-    }
-
-    public HashMap<String, Account> getDummyAccounts() {
-        return dummyAccounts;
     }
 }
