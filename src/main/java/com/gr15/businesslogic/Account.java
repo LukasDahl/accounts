@@ -1,4 +1,10 @@
-package com.gr15;
+/**
+ * @author Jonatan
+ */
+
+package com.gr15.businesslogic;
+
+import com.gr15.businesslogic.User;
 
 import java.util.UUID;
 

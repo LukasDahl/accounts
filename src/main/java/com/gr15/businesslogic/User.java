@@ -1,4 +1,8 @@
-package com.gr15;
+/**
+ * @author Jonatan
+ */
+
+package com.gr15.businesslogic;
 
 public class User {
     private String cprNumber, firstName, lastName;

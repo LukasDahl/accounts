@@ -1,7 +1,10 @@
+/**
+ * @author August
+ */
+
 package com.gr15.cucumber;
 
-import com.gr15.Account;
-import com.gr15.RestCom;
+import com.gr15.businesslogic.RestCom;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

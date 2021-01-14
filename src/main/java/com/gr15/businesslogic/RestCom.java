@@ -1,21 +1,15 @@
-package com.gr15;
+/**
+ * @author August
+ */
+
+package com.gr15.businesslogic;
 
 import javax.json.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Channel;
-import io.cucumber.java.hu.Ha;
 
 @Path("/accounts")
 public class RestCom {
