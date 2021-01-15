@@ -1,3 +1,7 @@
+/**
+ * @author Jonatan
+ */
+
 package com.gr15.businesslogic;
 
 import com.gr15.businesslogic.model.Account;
