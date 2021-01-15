@@ -46,7 +46,6 @@ public class QueueService implements IEventReceiver, IQueueService {
     private AccountManager accountManager;
 
     public QueueService(IEventSender eventSender) {
-        accountManager = AccountManager.getInstance();
         this.eventSender = eventSender;
     }
 
@@ -54,6 +53,8 @@ public class QueueService implements IEventReceiver, IQueueService {
     public void receiveEvent(Event event) throws QueueException {
 
         System.out.println("Handling event: " + event);
+        accountManager = AccountManager.getInstance();
+
 
         if (event.getEventType().equals(TOKEN_VALIDATED_EVENT)) {
 

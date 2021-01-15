@@ -40,7 +40,6 @@ public class AccountManager {
         System.out.println(instance);
         if (instance == null){
             instance = new AccountManager();
-            System.out.println(instance);
         }
         return instance;
     }
