@@ -25,20 +25,7 @@ public class account {
     private JsonArray accounts;
     private String message;
     private int numberOfAccounts;
-    private HashMap<String, Account> accountsMap = new HashMap<>();
 
-    public account() {
-        Account testAccount1 = new Account("Merchant", "0",
-                new User("000000-0000", "Jonatan", "Jonatansen"));
-        Account testAccount2 = new Account("Costumer", "1",
-                new User("000000-0001", "August", "Augustsen"));
-        Account testAccount3 = new Account("Costumer", "2",
-                new User("000000-0002", "Micheal", "Jordan"));
-
-        accountsMap.put(testAccount1.getId().toString(), testAccount1);
-        accountsMap.put(testAccount2.getId().toString(), testAccount2);
-        accountsMap.put(testAccount3.getId().toString(), testAccount3);
-    }
 
     @Given("a user with cpr {string} first name {string} last name {string} type {string} and bankAccountId {string}")
     public void newUser(String cpr, String first, String last, String type, String bank) {
@@ -89,17 +76,17 @@ public class account {
 
     @When("the user signs up")
     public void signUp() {
-        this.message = this.restCom.createUser(account, accountsMap);
+        this.message = this.restCom.createUser(account);
     }
 
     @When("the user gets the list of accounts")
     public void getAccounts() {
-        accounts = this.restCom.getUsers(accountsMap);
+        accounts = this.restCom.getUsers();
     }
 
     @When("the user deletes its account")
     public void deleteUser() {
-        restCom.deleteAccount(user.getString("cprNumber"), accountsMap);
+        restCom.deleteAccount(user.getString("cprNumber"));
     }
 
     @Then("the client get a message saying {string}")
@@ -152,7 +139,7 @@ public class account {
 
     @Given("there are accounts in the database")
     public void accountExists() {
-        numberOfAccounts = accountsMap.size();
+        numberOfAccounts = this.restCom.getUsers().size();
         Assert.assertTrue(numberOfAccounts > 0);
     }
 
@@ -160,11 +147,11 @@ public class account {
     public void deleteAccount() {
         //accountsMap.get(accountsMap.values().toArray()[0]).getId().toString()
         // TODO - get one of the ids
-        Assert.assertEquals("204", restCom.deleteAccount("0", accountsMap));
+        Assert.assertEquals("204", restCom.deleteAccount("0"));
     }
 
     @Then("There should be one account less")
     public void checkForOneLessAccount(){
-        Assert.assertTrue(numberOfAccounts > accountsMap.size());
+        Assert.assertTrue(numberOfAccounts > this.restCom.getUsers().size());
     }
 }
