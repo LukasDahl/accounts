@@ -25,6 +25,10 @@ public class Account {
         this.bankAccountId = bankAccountId;
         this.user = user;
     }
+    public Account(UUID id) {
+        this.id = id;
+        bankAccountId = "";
+    }
 
     public UUID getId() {
         return id;

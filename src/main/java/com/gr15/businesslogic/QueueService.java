@@ -12,6 +12,7 @@ import com.gr15.messaging.interfaces.IEventReceiver;
 import com.gr15.messaging.interfaces.IEventSender;
 import com.gr15.messaging.models.Event;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class QueueService implements IEventReceiver, IQueueService {
@@ -28,6 +29,9 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
     private static final String VALIDATE_ACCOUNTS_CMD = "validateAccounts";
 
+    private static final String ACCOUNT_EXISTS_CMD = "accountExistsRequest";
+    private static final String ACCOUNT_EXISTS_EVENT = "accountExistsResponse";
+
     private static final String TOKEN_VALIDATED_EVENT = "tokenValidated";
     private static final String ACCOUNT_VALIDATED_EVENT = "accountValidated";
     // private static final String ACCOUNTS_VALIDATED_EVENT = "accountsValidated";
@@ -43,21 +47,6 @@ public class QueueService implements IEventReceiver, IQueueService {
         this.eventSender = eventSender;
     }
 
-   /* @Override
-    public Account validateAccount(String accountId) throws QueueException {
-
-        Event event = new Event(VALIDATE_ACCOUNT_CMD, accountId);
-
-        accountResult = new CompletableFuture<Account>();
-        try {
-            eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_CMD_BASE + VALIDATE_ACCOUNT_CMD);
-        } catch (Exception e) {
-            throw new QueueException("Error while validating account");
-        }
-
-        return accountResult.join();
-    }*/
-
     @Override
     public void receiveEvent(Event event) throws QueueException {
 
@@ -72,27 +61,46 @@ public class QueueService implements IEventReceiver, IQueueService {
         } else if (event.getEventType().equals(VALIDATE_ACCOUNTS_CMD)) {
             String accountId = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
 
-            //var account = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), Account.class);
+            validateAccount(accountId);
 
-            //accountResult.complete(accountId);
+        } else if (event.getEventInfo().equals(ACCOUNT_EXISTS_CMD)){
+            String accountId = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
+
+            accountExists(accountId);
 
         } else {
             System.out.println("event ignored: " + event);
         }
     }
 
-    public void validateAccount(String accountId) throws QueueException {
+    private void validateAccount(String accountId) throws QueueException {
         Account account = accountManager.validateAccount(accountId);
-        /*if (account == null){
-            account = new Account();
-        }*/
+        if (account == null)
+            account = new Account(UUID.fromString(accountId));
 
-        Event event = new Event (ACCOUNT_VALIDATED_EVENT, account);
+        Event event = new Event(ACCOUNT_VALIDATED_EVENT, account);
 
         try{
             eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_VALIDATED_EVENT);
         } catch(Exception e){
             throw new QueueException("Error while publishing account validated event.");
+        }
+    }
+
+    private void accountExists(String accountId) throws QueueException {
+        String responseString = accountId + ",";
+
+        if (accountManager.validateAccount(accountId) != null)
+            responseString += "1";
+        else
+            responseString += "0";
+
+        Event event = new Event(ACCOUNT_EXISTS_EVENT, responseString);
+
+        try{
+            eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
+        } catch (Exception e){
+            throw new QueueException("Error while poblishin account exists event.");
         }
     }
 }
