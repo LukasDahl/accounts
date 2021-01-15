@@ -21,8 +21,7 @@ public class RestCom {
     private AccountManager accountManager;
 
     public RestCom(){
-        accountManager = new AccountManager();
-        accountManager = accountManager.getInstance();
+        accountManager = AccountManager.getInstance();
     }
 
     @GET

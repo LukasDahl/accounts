@@ -35,8 +35,10 @@ public class QueueService implements IEventReceiver, IQueueService {
     private IEventSender eventSender;
     private CompletableFuture<Account> accountResult;
     private CompletableFuture<TokenInfo> tokenInfoResult;
+    private AccountManager accountManager;
 
     public QueueService(IEventSender eventSender) {
+        accountManager = AccountManager.getInstance();
         this.eventSender = eventSender;
     }
 
