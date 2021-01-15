@@ -2,9 +2,7 @@
  * @author Jonatan
  */
 
-package com.gr15.businesslogic;
-
-import com.gr15.businesslogic.User;
+package com.gr15.businesslogic.model;
 
 import java.util.UUID;
 
