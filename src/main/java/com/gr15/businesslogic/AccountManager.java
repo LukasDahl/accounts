@@ -7,11 +7,9 @@ package com.gr15.businesslogic;
 import com.gr15.businesslogic.exceptions.QueueException;
 import com.gr15.businesslogic.model.Account;
 import com.gr15.businesslogic.model.User;
-import com.gr15.businesslogic.IQueueService;
 import com.gr15.messaging.rabbitmq.RabbitMqSender;
 
 import javax.json.*;
-import javax.ws.rs.QueryParam;
 import java.util.HashMap;
 
 public class AccountManager {
@@ -20,9 +18,6 @@ public class AccountManager {
     private final QueueService queueService = new QueueService(new RabbitMqSender());
 
     private AccountManager() {
-
-
-
         Account testAccount1 = new Account("Merchant", "0",
                 new User("000000-0000", "Jonatan", "Jonatansen"));
         Account testAccount2 = new Account("Costumer", "1",
@@ -44,14 +39,9 @@ public class AccountManager {
         return instance;
     }
 
-    public HashMap<String, Account> getAccounts() {
-        return accounts;
-    }
-
     public Account validateAccount(String accountId) {
         return accounts.get(accountId);
     }
-
 
     public JsonArray getUsers() {
         JsonArrayBuilder usersBuild = Json.createArrayBuilder();
@@ -72,7 +62,6 @@ public class AccountManager {
 
         return usersBuild.build();
     }
-
 
     public JsonObject getUserWithCpr(String userCpr) {
         Account account = null;
@@ -141,7 +130,6 @@ public class AccountManager {
         return "user created";
     }
 
-
     public String deleteAccount(String accountId) throws QueueException {
         if(accounts.remove(accountId) != null) {
             queueService.publishDeleteAccountEvent(accountId);
@@ -149,5 +137,4 @@ public class AccountManager {
         }
         return "404";
     }
-
 }

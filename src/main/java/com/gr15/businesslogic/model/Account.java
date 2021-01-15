@@ -4,7 +4,6 @@
 
 package com.gr15.businesslogic.model;
 
-import javax.swing.*;
 import java.util.UUID;
 
 public class Account {

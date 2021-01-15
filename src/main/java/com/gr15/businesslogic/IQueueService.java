@@ -1,15 +1,13 @@
 /**
- * @author Wassim
+ * @author August
  */
 
 package com.gr15.businesslogic;
 
-
 import com.gr15.businesslogic.exceptions.QueueException;
-import com.gr15.businesslogic.model.Account;
 
 public interface IQueueService {
-    //Account validateAccount(String accountId) throws QueueException;
-
+    void validateAccount(String accountId) throws QueueException;
+    void accountExists(String accountId) throws QueueException;
     void publishDeleteAccountEvent(String accountId) throws QueueException;
 }

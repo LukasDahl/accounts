@@ -34,9 +34,8 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     private static final String TOKEN_VALIDATED_EVENT = "tokenValidated";
     private static final String ACCOUNT_VALIDATED_EVENT = "accountValidated";
-    // private static final String ACCOUNTS_VALIDATED_EVENT = "accountsValidated";
+    //private static final String ACCOUNTS_VALIDATED_EVENT = "accountsValidated";
     private static final String TRANSACTION_CREATED_EVENT = "transactionCreated";
-
 
     private static final String ACCOUNT_DELETE_EVENT = "accountDeleted";
 
@@ -55,14 +54,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         System.out.println("Handling event: " + event);
         accountManager = AccountManager.getInstance();
 
-
-        if (event.getEventType().equals(TOKEN_VALIDATED_EVENT)) {
-
-            var tokenInfo = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), TokenInfo.class);
-
-            tokenInfoResult.complete(tokenInfo);
-
-        } else if (event.getEventType().equals(VALIDATE_ACCOUNTS_CMD)) {
+        if (event.getEventType().equals(VALIDATE_ACCOUNTS_CMD)) {
             String accountId = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
 
             validateAccount(accountId);
@@ -77,7 +69,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         }
     }
 
-    private void validateAccount(String accountId) throws QueueException {
+    public void validateAccount(String accountId) throws QueueException {
         accountManager = AccountManager.getInstance();
         Account account = accountManager.validateAccount(accountId);
         if (account == null)
@@ -92,7 +84,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         }
     }
 
-    private void accountExists(String accountId) throws QueueException {
+    public void accountExists(String accountId) throws QueueException {
         String responseString = accountId + ",";
         accountManager = AccountManager.getInstance();
 
@@ -106,10 +98,9 @@ public class QueueService implements IEventReceiver, IQueueService {
         try{
             eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
         } catch (Exception e){
-            throw new QueueException("Error while poblishin account exists event.");
+            throw new QueueException("Error while publishing account exists event.");
         }
     }
-
 
     @Override
     public void publishDeleteAccountEvent(String accountId) throws QueueException {
