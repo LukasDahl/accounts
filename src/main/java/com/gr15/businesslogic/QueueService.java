@@ -78,6 +78,7 @@ public class QueueService implements IEventReceiver, IQueueService {
     }
 
     private void validateAccount(String accountId) throws QueueException {
+        accountManager = AccountManager.getInstance();
         Account account = accountManager.validateAccount(accountId);
         if (account == null)
             account = new Account(UUID.fromString(accountId));
@@ -93,6 +94,7 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     private void accountExists(String accountId) throws QueueException {
         String responseString = accountId + ",";
+        accountManager = AccountManager.getInstance();
 
         if (accountManager.validateAccount(accountId) != null)
             responseString += "1";
