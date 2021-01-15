@@ -23,7 +23,7 @@ public class AccountManager {
         accounts.put(testAccount3.getId().toString(), testAccount3);
     }
 
-    public AccountManager getInstance(){
+    public static AccountManager getInstance(){
         if (instance == null){
             instance = new AccountManager();
         }
@@ -33,4 +33,9 @@ public class AccountManager {
     public HashMap<String, Account> getAccounts() {
         return accounts;
     }
+
+    public Account validateAccount(String accountId) {
+        return accounts.get(accountId);
+    }
+
 }
