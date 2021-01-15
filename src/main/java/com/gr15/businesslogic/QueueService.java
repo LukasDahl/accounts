@@ -22,6 +22,7 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String TOKEN_CMD_BASE = "token.cmds.";
     private static final String ACCOUNT_CMD_BASE = "account.cmds.";
     private static final String TRANSACTION_EVENT_BASE = "transaction.events.";
+    private static final String ACCOUNT_EVENT_BASE = "account.events";
 
     private static final String VALIDATE_TOKEN_CMD = "validateToken";
     private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
@@ -42,7 +43,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         this.eventSender = eventSender;
     }
 
-    @Override
+   /* @Override
     public Account validateAccount(String accountId) throws QueueException {
 
         Event event = new Event(VALIDATE_ACCOUNT_CMD, accountId);
@@ -55,7 +56,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         }
 
         return accountResult.join();
-    }
+    }*/
 
     @Override
     public void receiveEvent(Event event) throws QueueException {
@@ -80,5 +81,18 @@ public class QueueService implements IEventReceiver, IQueueService {
         }
     }
 
-    //public void
+    public void validateAccount(String accountId) throws QueueException {
+        Account account = accountManager.validateAccount(accountId);
+        /*if (account == null){
+            account = new Account();
+        }*/
+
+        Event event = new Event (ACCOUNT_VALIDATED_EVENT, account);
+
+        try{
+            eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_VALIDATED_EVENT);
+        } catch(Exception e){
+            throw new QueueException("Error while publishing account validated event.");
+        }
+    }
 }

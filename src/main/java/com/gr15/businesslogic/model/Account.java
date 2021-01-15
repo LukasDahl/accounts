@@ -18,6 +18,10 @@ public class Account {
         this.user = user;
     }
 
+    public Account(){
+
+    }
+
     public UUID getId() {
         return id;
     }
