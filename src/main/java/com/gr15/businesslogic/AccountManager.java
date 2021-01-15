@@ -3,6 +3,8 @@ package com.gr15.businesslogic;
 import com.gr15.businesslogic.model.Account;
 import com.gr15.businesslogic.model.User;
 
+import javax.json.*;
+import javax.ws.rs.QueryParam;
 import java.util.HashMap;
 
 public class AccountManager {
@@ -36,6 +38,102 @@ public class AccountManager {
 
     public Account validateAccount(String accountId) {
         return accounts.get(accountId);
+    }
+
+
+    public JsonArray getUsers() {
+        JsonArrayBuilder usersBuild = Json.createArrayBuilder();
+        for(Account account : accounts.values()) {
+            JsonObjectBuilder userBuild = Json.createObjectBuilder()
+                    .add("cprNumber", account.getUser().getCprNumber())
+                    .add("firstName", account.getUser().getFirstName())
+                    .add("lastName", account.getUser().getLastName());
+            JsonObject userJson = userBuild.build();
+
+            JsonObjectBuilder accountBuild = Json.createObjectBuilder()
+                    .add("type", account.getType())
+                    .add("bankAccountId", account.getBankAccountId())
+                    .add("id", account.getId().toString())
+                    .add("user", userJson);
+            usersBuild.add(accountBuild.build());
+        }
+
+        return usersBuild.build();
+    }
+
+
+    public JsonObject getUserWithCpr(String userCpr) {
+        Account account = null;
+
+        for(Account temp_account: accounts.values()){
+            if (temp_account.getUser().getCprNumber().equals(userCpr))
+                account = temp_account;
+        }
+        // todo make error message
+        if (account == null){
+            return null;
+        }
+
+        JsonObjectBuilder userBuild = Json.createObjectBuilder()
+                .add("cprNumber", account.getUser().getCprNumber())
+                .add("firstName", account.getUser().getFirstName())
+                .add("lastName", account.getUser().getLastName());
+        JsonObject userJson = userBuild.build();
+
+        JsonObjectBuilder accountBuild = Json.createObjectBuilder()
+                .add("type", account.getType())
+                .add("bankAccountId", account.getBankAccountId())
+                .add("id", account.getId().toString())
+                .add("user", userJson);
+
+        return accountBuild.build();
+    }
+
+    public String createUser(JsonObject jsonObject) {
+
+        String type, bankAccountID, cpr, first, last;
+
+        try {
+            last = jsonObject.getJsonObject("user").getString("lastName");
+        } catch (NullPointerException e){
+            return "400 error: missing lastName";
+        }
+
+        try {
+            first = jsonObject.getJsonObject("user").getString("firstName");
+        } catch (NullPointerException e){
+            return "400 error: missing firstName";
+        }
+
+        try {
+            cpr = jsonObject.getJsonObject("user").getString("cprNumber");
+        } catch (NullPointerException e){
+            return "400 error: missing cprNumber";
+        }
+
+        try {
+            bankAccountID = jsonObject.getString("bankAccountId");
+        } catch (NullPointerException e){
+            return "400 error: missing bankAccountId";
+        }
+
+        try {
+            type = jsonObject.getString("type");
+        } catch (NullPointerException e){
+            return "400 error: missing type";
+        }
+        Account account = new Account(type, bankAccountID,
+                new User(cpr, first, last));
+        accounts.put(account.getId().toString(), account);
+
+        return "user created";
+    }
+
+
+    public String deleteAccount(String accountId) {
+        if(accounts.remove(accountId) != null)
+            return "204";
+        return "404";
     }
 
 }
