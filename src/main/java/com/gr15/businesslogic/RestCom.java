@@ -4,6 +4,9 @@
 
 package com.gr15.businesslogic;
 
+import com.gr15.businesslogic.model.Account;
+import com.gr15.businesslogic.model.User;
+
 import javax.json.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,26 +18,17 @@ import java.util.HashMap;
 @Path("/accounts")
 public class RestCom {
 
-    private HashMap<String, Account> accounts = new HashMap<>();
+    private AccountManager accountManager;
 
     public RestCom(){
-
-            Account testAccount1 = new Account("Merchant", "0",
-                    new User("000000-0000", "Jonatan", "Jonatansen"));
-            Account testAccount2 = new Account("Costumer", "1",
-                    new User("000000-0001", "August", "Augustsen"));
-            Account testAccount3 = new Account("Costumer", "2",
-                    new User("000000-0002", "Micheal", "Jordan"), "8ea0bd16-86eb-498c-9fb7-f8b26c8d76bb");
-
-            accounts.put(testAccount1.getId().toString(), testAccount1);
-            accounts.put(testAccount2.getId().toString(), testAccount2);
-            accounts.put(testAccount3.getId().toString(), testAccount3);
+        accountManager = new AccountManager();
+        accountManager = accountManager.getInstance();
     }
 
     @GET
     public JsonArray getUsers() {
         JsonArrayBuilder usersBuild = Json.createArrayBuilder();
-        for(Account account : accounts.values()) {
+        for(Account account : accountManager.getAccounts().values()) {
             JsonObjectBuilder userBuild = Json.createObjectBuilder()
                     .add("cprNumber", account.getUser().getCprNumber())
                     .add("firstName", account.getUser().getFirstName())
@@ -59,7 +53,7 @@ public class RestCom {
     public JsonObject getUserWithCpr(@QueryParam("userCpr") String userCpr) {
         Account account = null;
 
-        for(Account temp_account: accounts.values()){
+        for(Account temp_account: accountManager.getAccounts().values()){
             if (temp_account.getUser().getCprNumber().equals(userCpr))
                 account = temp_account;
         }
@@ -120,7 +114,7 @@ public class RestCom {
         }
         Account account = new Account(type, bankAccountID,
                 new User(cpr, first, last));
-        accounts.put(account.getId().toString(), account);
+        accountManager.getAccounts().put(account.getId().toString(), account);
 
         // todo publish user
 
@@ -145,7 +139,7 @@ public class RestCom {
 
     @DELETE
     public String deleteAccount(String accountId) {
-        if(accounts.remove(accountId) != null)
+        if(accountManager.getAccounts().remove(accountId) != null)
             return "204";
         return "404";
     }

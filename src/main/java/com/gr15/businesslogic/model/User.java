@@ -2,7 +2,7 @@
  * @author Jonatan
  */
 
-package com.gr15.businesslogic;
+package com.gr15.businesslogic.model;
 
 public class User {
     private String cprNumber, firstName, lastName;

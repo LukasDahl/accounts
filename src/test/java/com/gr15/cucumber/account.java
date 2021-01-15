@@ -4,17 +4,13 @@
 
 package com.gr15.cucumber;
 
-import com.gr15.businesslogic.Account;
 import com.gr15.businesslogic.RestCom;
-import com.gr15.businesslogic.User;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 
 import javax.json.*;
-
-import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
