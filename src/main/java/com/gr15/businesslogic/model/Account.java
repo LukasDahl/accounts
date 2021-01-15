@@ -4,6 +4,7 @@
 
 package com.gr15.businesslogic.model;
 
+import javax.swing.*;
 import java.util.UUID;
 
 public class Account {
@@ -18,8 +19,11 @@ public class Account {
         this.user = user;
     }
 
-    public Account(){
-
+    public Account(String type, String bankAccountId, User user, String uuid){
+        this.id = UUID.fromString(uuid);
+        this.type = type;
+        this.bankAccountId = bankAccountId;
+        this.user = user;
     }
 
     public UUID getId() {
