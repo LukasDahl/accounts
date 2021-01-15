@@ -5,6 +5,7 @@
 package com.gr15.cucumber;
 
 import com.gr15.businesslogic.RestCom;
+import com.gr15.businesslogic.exceptions.QueueException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -97,12 +98,12 @@ public class account {
     }
 
     @When("the user deletes its account")
-    public void deleteUser() {
+    public void deleteUser() throws QueueException {
         restCom.deleteAccount(foundAccount.getString("id"));
     }
 
     @When("an account with id {string} is deleted")
-    public void deleteUserWithId(String accountId) {
+    public void deleteUserWithId(String accountId) throws QueueException {
         restCom.deleteAccount(accountId);
     }
 

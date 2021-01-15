@@ -4,6 +4,7 @@
 
 package com.gr15.businesslogic;
 
+import com.gr15.businesslogic.exceptions.QueueException;
 import com.gr15.businesslogic.model.Account;
 import com.gr15.businesslogic.model.User;
 
@@ -41,7 +42,7 @@ public class RestCom {
     }
 
     @DELETE
-    public String deleteAccount(String accountId) {
+    public String deleteAccount(String accountId) throws QueueException {
         return accountManager.deleteAccount(accountId);
     }
 

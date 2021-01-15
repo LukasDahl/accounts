@@ -37,6 +37,9 @@ public class QueueService implements IEventReceiver, IQueueService {
     // private static final String ACCOUNTS_VALIDATED_EVENT = "accountsValidated";
     private static final String TRANSACTION_CREATED_EVENT = "transactionCreated";
 
+
+    private static final String ACCOUNT_DELETE_EVENT = "accountDeleted";
+
     private IEventSender eventSender;
     private CompletableFuture<Account> accountResult;
     private CompletableFuture<TokenInfo> tokenInfoResult;
@@ -101,6 +104,17 @@ public class QueueService implements IEventReceiver, IQueueService {
             eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
         } catch (Exception e){
             throw new QueueException("Error while poblishin account exists event.");
+        }
+    }
+
+
+    @Override
+    public void publishDeleteAccountEvent(String accountId) throws QueueException {
+        Event event = new Event(ACCOUNT_DELETE_EVENT, accountId);
+        try {
+            eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_DELETE_EVENT);
+        } catch (Exception e) {
+            throw new QueueException("Error while publishing account delete event");
         }
     }
 }

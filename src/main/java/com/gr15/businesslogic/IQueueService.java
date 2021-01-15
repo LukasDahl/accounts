@@ -10,4 +10,6 @@ import com.gr15.businesslogic.model.Account;
 
 public interface IQueueService {
     //Account validateAccount(String accountId) throws QueueException;
+
+    void publishDeleteAccountEvent(String accountId) throws QueueException;
 }
