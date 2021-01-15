@@ -28,11 +28,17 @@ Feature: Account
     And the user gets the list of accounts
     Then there is no more an account with the users information
 
-  Scenario: Delete
-    Given there are accounts in the database with id 2
-    When an account with id 2 is deleted
+  Scenario: Delete account
+    Given there are accounts in the database with id "8ea0bd16-86eb-498c-9fb7-f8b26c8d76bb"
+    When an account with id "8ea0bd16-86eb-498c-9fb7-f8b26c8d76bb" is deleted
     And the user gets the list of accounts
-    Then Then the is no more an account with id 2
+    Then there is no more an account with id "8ea0bd16-86eb-498c-9fb7-f8b26c8d76bb"
+
+  Scenario: Get user by cpr
+    Given a user with cpr "126" first name "nos" last name "mores" type "Costumer" and bankAccountId "9995"
+    And the user is in the system
+    When the user gets its account by giving its cpr "126"
+    Then Then the user gets its account
 
 #  Scenario Outline:  Create users
 #    Given a new user with cpr <cpr> first name <first name> last name <last name> type <type> and bankAccountId <bankAccountId>

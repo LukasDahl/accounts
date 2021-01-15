@@ -24,7 +24,7 @@ public class RestCom {
             Account testAccount2 = new Account("Costumer", "1",
                     new User("000000-0001", "August", "Augustsen"));
             Account testAccount3 = new Account("Costumer", "2",
-                    new User("000000-0002", "Micheal", "Jordan"));
+                    new User("000000-0002", "Micheal", "Jordan"), "8ea0bd16-86eb-498c-9fb7-f8b26c8d76bb");
 
             accounts.put(testAccount1.getId().toString(), testAccount1);
             accounts.put(testAccount2.getId().toString(), testAccount2);

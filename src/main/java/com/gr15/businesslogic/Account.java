@@ -6,6 +6,7 @@ package com.gr15.businesslogic;
 
 import com.gr15.businesslogic.User;
 
+import javax.swing.*;
 import java.util.UUID;
 
 public class Account {
@@ -15,6 +16,13 @@ public class Account {
 
     public Account(String type, String bankAccountId, User user){
         this.id = UUID.randomUUID();
+        this.type = type;
+        this.bankAccountId = bankAccountId;
+        this.user = user;
+    }
+
+    public Account(String type, String bankAccountId, User user, String uuid){
+        this.id = UUID.fromString(uuid);
         this.type = type;
         this.bankAccountId = bankAccountId;
         this.user = user;

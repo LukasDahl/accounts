@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 public class account {
     private RestCom restCom = new RestCom();
-    private JsonObject user, account;
+    private JsonObject user, account, foundAccount;
     private JsonArray accounts;
     private String message;
     private int numberOfAccounts;
@@ -74,6 +74,22 @@ public class account {
         checkAccounts();
     }
 
+    @Given("there are accounts in the database with id {string}")
+    public void accountWithIdInSystem(String accountId) {
+        boolean inSys = false;
+        getAccounts();
+        for (JsonValue jsonVal : accounts) {
+            JsonObject jsonObject = jsonVal.asJsonObject();
+            System.out.println(jsonObject.getString("id"));
+            if (jsonObject.getString("id").equals(accountId))
+                inSys = true;
+                this.foundAccount = jsonObject;
+        }
+        assertTrue(inSys);
+    }
+
+
+
     @When("the user signs up")
     public void signUp() {
         this.message = this.restCom.createUser(account);
@@ -86,7 +102,18 @@ public class account {
 
     @When("the user deletes its account")
     public void deleteUser() {
-        restCom.deleteAccount(user.getString("cprNumber"));
+        restCom.deleteAccount(foundAccount.getString("id"));
+    }
+
+    @When("an account with id {string} is deleted")
+    public void deleteUserWithId(String accountId) {
+        restCom.deleteAccount(accountId);
+    }
+
+    @When("the user gets its account by giving its cpr {string}")
+    public void getAccountWithCpr(String userCpr) {
+        this.foundAccount = restCom.getUserWithCpr(userCpr);
+
     }
 
     @Then("the client get a message saying {string}")
@@ -94,6 +121,30 @@ public class account {
         assertEquals(message, expededMessage);
     }
 
+    @Then("Then the user gets its account")
+    public void chekAccount() {
+        boolean accountFound = false;
+
+        if (foundAccount.get("user").toString().equals(user.toString())
+                && foundAccount.getString("type").equals(account.getString("type"))
+                && foundAccount.getString("bankAccountId").equals(account.getString("bankAccountId"))
+        )
+            accountFound = true;
+        assertTrue(accountFound);
+    }
+
+
+    @Then("there is no more an account with id {string}")
+    public void accountWithIdNotInSystem(String accountId) {
+        boolean inSys = true;
+        getAccounts();
+        for (JsonValue jsonVal : accounts) {
+            JsonObject jsonObject = jsonVal.asJsonObject();
+            if (jsonObject.getString("id").equals(accountId))
+                inSys = false;
+        }
+        assertTrue(inSys);
+    }
 
     @Then("the sign up is successful")
     public void signUpTrue() {
@@ -111,8 +162,11 @@ public class account {
                     && jsonObject.getString("type").equals(account.getString("type"))
                     && jsonObject.getString("bankAccountId").equals(account.getString("bankAccountId"))
 
-            )
+            ){
                 accountFound = true;
+                this.foundAccount = jsonObject;
+            }
+
         }
 
         assertTrue(accountFound);
@@ -141,13 +195,6 @@ public class account {
     public void accountExists() {
         numberOfAccounts = this.restCom.getUsers().size();
         Assert.assertTrue(numberOfAccounts > 0);
-    }
-
-    @When("an account is deleted")
-    public void deleteAccount() {
-        //accountsMap.get(accountsMap.values().toArray()[0]).getId().toString()
-        // TODO - get one of the ids
-        Assert.assertEquals("204", restCom.deleteAccount("0"));
     }
 
     @Then("There should be one account less")
