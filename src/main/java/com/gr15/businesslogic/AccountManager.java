@@ -7,7 +7,6 @@ import java.util.HashMap;
 
 public class AccountManager {
     private HashMap<String, Account> accounts = new HashMap<>();
-    private RestCom restCom = new RestCom();
     private static AccountManager instance = null;
 
     public AccountManager() {
