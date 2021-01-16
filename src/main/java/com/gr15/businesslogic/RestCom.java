@@ -28,8 +28,9 @@ public class RestCom {
     }
 
     @GET
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getUserWithCpr(@PathParam(MediaType.TEXT_PLAIN) String userCpr) {
+    public JsonObject getUserWithCpr(@PathParam("id") String userCpr) {
         return accountManager.getUserWithCpr(userCpr);
     }
 
@@ -39,8 +40,9 @@ public class RestCom {
     }
 
     @DELETE
+    @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String deleteAccount(@PathParam(MediaType.TEXT_PLAIN) String accountId) throws QueueException {
+    public String deleteAccount(@PathParam("id") String accountId) throws QueueException {
         return accountManager.deleteAccount(accountId);
     }
 }
