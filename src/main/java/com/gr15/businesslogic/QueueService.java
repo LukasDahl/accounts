@@ -10,6 +10,7 @@ import com.gr15.businesslogic.model.Account;
 import com.gr15.messaging.interfaces.IEventReceiver;
 import com.gr15.messaging.interfaces.IEventSender;
 import com.gr15.messaging.models.Event;
+import com.gr15.messaging.rabbitmq.RabbitMqListener;
 
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String ACCOUNT_EVENT_BASE = "account.events";
 
 
-    private static final String VALIDATE_ACCOUNTS_CMD = "validateAccounts";
+    private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
 
     private static final String ACCOUNT_EXISTS_CMD = "accountExistsRequest";
     private static final String ACCOUNT_EXISTS_EVENT = "accountExistsResponse";
@@ -36,6 +37,13 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     public QueueService(IEventSender eventSender) {
         this.eventSender = eventSender;
+
+        RabbitMqListener r = new RabbitMqListener(this);
+        try {
+            r.listen(EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + "#");
+        } catch (Exception e) {
+            throw new Error(e);
+        }
     }
 
     @Override
@@ -44,7 +52,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         System.out.println("Handling event: " + event);
         accountManager = AccountManager.getInstance();
 
-        if (event.getEventType().equals(VALIDATE_ACCOUNTS_CMD)) {
+        if (event.getEventType().equals(VALIDATE_ACCOUNT_CMD)) {
             String accountId = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
 
             validateAccount(accountId);
