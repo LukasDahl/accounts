@@ -16,11 +16,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/accounts")
 public class RestCom {
 
-    private AccountManager accountManager;
-
-    public RestCom(){
-        accountManager = AccountManager.getInstance();
-    }
+    private final AccountManager accountManager = AccountManager.getInstance();
 
     @GET
     public JsonArray getUsers() {

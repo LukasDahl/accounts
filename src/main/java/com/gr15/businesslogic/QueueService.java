@@ -33,7 +33,7 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     private IEventSender eventSender;
 
-    private AccountManager accountManager;
+    private AccountManager accountManager = AccountManager.getInstance();
 
     public QueueService(IEventSender eventSender) {
         this.eventSender = eventSender;
@@ -50,7 +50,6 @@ public class QueueService implements IEventReceiver, IQueueService {
     public void receiveEvent(Event event) throws QueueException {
 
         System.out.println("Handling event: " + event);
-        accountManager = AccountManager.getInstance();
 
         if (event.getEventType().equals(VALIDATE_ACCOUNT_CMD)) {
             String accountId = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
