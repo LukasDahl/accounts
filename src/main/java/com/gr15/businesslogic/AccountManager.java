@@ -18,9 +18,9 @@ public class AccountManager {
     private final QueueService queueService = new QueueService(new RabbitMqSender());
 
     private AccountManager() {
-        Account testAccount1 = new Account("Merchant", "0",
+        Account testAccount1 = new Account("Costumer", "f2f2e491-26c8-4e86-b084-d2faf560bcdb",
                 new User("000000-0000", "Jonatan", "Jonatansen"));
-        Account testAccount2 = new Account("Costumer", "1",
+        Account testAccount2 = new Account("Merchant", "77f3674a-3515-4c2e-b5c3-067c8f09f9b3",
                 new User("000000-0001", "August", "Augustsen"));
         Account testAccount3 = new Account("Costumer", "2",
                 new User("000000-0002", "Micheal", "Jordan"),
