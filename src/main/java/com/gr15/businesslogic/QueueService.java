@@ -57,7 +57,7 @@ public class QueueService implements IEventReceiver, IQueueService {
 
             validateAccount(accountId);
 
-        } else if (event.getEventInfo().equals(ACCOUNT_EXISTS_CMD)) {
+        } else if (event.getEventType().equals(ACCOUNT_EXISTS_CMD)) {
             String accountId = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
 
             accountExists(accountId);
