@@ -20,7 +20,7 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String EXCHANGE_NAME = "accountsExchange";
 
     private static final String ACCOUNT_EVENT_BASE = "account.events";
-    private static final String ACCOUNT_CMD_BASE = "account.cmd";
+    private static final String ACCOUNT_CMD_BASE = "account.cmds";
 
 
     private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
