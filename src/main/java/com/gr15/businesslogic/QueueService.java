@@ -19,9 +19,8 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String QUEUE_TYPE = "topic";
     private static final String EXCHANGE_NAME = "paymentsExchange";
 
-    private static final String ACCOUNT_EVENT_BASE = "account.events";
-    private static final String ACCOUNT_CMD_BASE = "account.cmds";
-
+    private static final String ACCOUNT_EVENT_BASE = "account.events.";
+    private static final String ACCOUNT_CMD_BASE = "account.cmds.";
 
     private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
 
@@ -58,7 +57,7 @@ public class QueueService implements IEventReceiver, IQueueService {
 
             validateAccount(accountId);
 
-        } else if (event.getEventInfo().equals(ACCOUNT_EXISTS_CMD)){
+        } else if (event.getEventInfo().equals(ACCOUNT_EXISTS_CMD)) {
             String accountId = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
 
             accountExists(accountId);
@@ -76,9 +75,9 @@ public class QueueService implements IEventReceiver, IQueueService {
 
         Event event = new Event(ACCOUNT_VALIDATED_EVENT, account);
 
-        try{
+        try {
             eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_VALIDATED_EVENT);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new QueueException("Error while publishing account validated event.");
         }
     }
@@ -94,9 +93,9 @@ public class QueueService implements IEventReceiver, IQueueService {
 
         Event event = new Event(ACCOUNT_EXISTS_EVENT, responseString);
 
-        try{
+        try {
             eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new QueueException("Error while publishing account exists event.");
         }
     }
