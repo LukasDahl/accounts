@@ -17,7 +17,7 @@ import java.util.UUID;
 public class QueueService implements IEventReceiver, IQueueService {
 
     private static final String QUEUE_TYPE = "topic";
-    private static final String EXCHANGE_NAME = "accountsExchange";
+    private static final String EXCHANGE_NAME = "paymentsExchange";
 
     private static final String ACCOUNT_EVENT_BASE = "account.events";
     private static final String ACCOUNT_CMD_BASE = "account.cmds";
