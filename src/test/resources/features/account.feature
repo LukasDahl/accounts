@@ -13,7 +13,7 @@ Feature: Account
   Scenario:  Create account no cpr
     Given a user with first name "john" last name "bib" type "Costumer" and bankAccountId "9998"
     When the user signs up
-    Then the client get a message saying "400 error: missing cprNumber"
+    Then the client get a message saying "400 Missing element(s)"
 
   Scenario:  Create account and see accounts
     Given a user with cpr "124" first name "sob" last name "sib" type "Merchant" and bankAccountId "9997"
@@ -23,7 +23,7 @@ Feature: Account
 
   Scenario:  Delete account and see account
     Given a user with cpr "125" first name "no" last name "more" type "Costumer" and bankAccountId "9996"
-    And the user is in the system
+    And the user with cpr "125" is in the system
     When the user deletes its account
     And the user gets the list of accounts
     Then there is no more an account with the users information
@@ -36,7 +36,7 @@ Feature: Account
 
   Scenario: Get user by cpr
     Given a user with cpr "126" first name "nos" last name "mores" type "Costumer" and bankAccountId "9995"
-    And the user is in the system
+    And the user with cpr "126" is in the system
     When the user gets its account by giving its cpr "126"
     Then Then the user gets its account
 

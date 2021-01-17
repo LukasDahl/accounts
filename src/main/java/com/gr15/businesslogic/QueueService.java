@@ -33,22 +33,19 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     private IEventSender eventSender;
 
-    private AccountManager accountManager = AccountManager.getInstance();
 
     public QueueService(IEventSender eventSender) {
         this.eventSender = eventSender;
-
-        RabbitMqListener r = new RabbitMqListener(this);
+        /*RabbitMqListener r = new RabbitMqListener(this);
         try {
             r.listen(EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_CMD_BASE + "#");
         } catch (Exception e) {
             throw new Error(e);
-        }
+        }*/
     }
 
     @Override
     public void receiveEvent(Event event) throws QueueException {
-
         System.out.println("Handling event: " + event);
 
         if (event.getEventType().equals(VALIDATE_ACCOUNT_CMD)) {
@@ -67,8 +64,7 @@ public class QueueService implements IEventReceiver, IQueueService {
     }
 
     public void validateAccount(String accountId) throws QueueException {
-        accountManager = AccountManager.getInstance();
-        Account account = accountManager.validateAccount(accountId);
+        Account account = AccountManager.getInstance().validateAccount(accountId);
         if (account == null)
             account = new Account(UUID.fromString(accountId));
 
@@ -83,9 +79,8 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     public void accountExists(String accountId) throws QueueException {
         String responseString = accountId + ",";
-        accountManager = AccountManager.getInstance();
 
-        if (accountManager.validateAccount(accountId) != null)
+        if (AccountManager.getInstance().validateAccount(accountId) != null)
             responseString += "1";
         else
             responseString += "0";

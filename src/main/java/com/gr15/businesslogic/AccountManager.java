@@ -10,6 +10,9 @@ import com.gr15.businesslogic.model.User;
 import com.gr15.messaging.rabbitmq.RabbitMqSender;
 
 import javax.json.*;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 
 public class AccountManager {
@@ -32,10 +35,7 @@ public class AccountManager {
     }
 
     public static AccountManager getInstance(){
-        System.out.println(instance);
-        if (instance == null){
-            instance = new AccountManager();
-        }
+        if (instance == null) instance = new AccountManager();
         return instance;
     }
 
@@ -43,36 +43,43 @@ public class AccountManager {
         return accounts.get(accountId);
     }
 
-    public JsonArray getUsers() {
-        JsonArrayBuilder usersBuild = Json.createArrayBuilder();
+    public Response getUsers() {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for(Account account : accounts.values()) {
-            JsonObjectBuilder userBuild = Json.createObjectBuilder()
+            JsonObject userJson = Json.createObjectBuilder()
                     .add("cprNumber", account.getUser().getCprNumber())
                     .add("firstName", account.getUser().getFirstName())
-                    .add("lastName", account.getUser().getLastName());
-            JsonObject userJson = userBuild.build();
+                    .add("lastName", account.getUser().getLastName())
+                    .build();
 
-            JsonObjectBuilder accountBuild = Json.createObjectBuilder()
+            JsonObject accountJson = Json.createObjectBuilder()
                     .add("type", account.getType())
                     .add("bankAccountId", account.getBankAccountId())
                     .add("id", account.getId().toString())
-                    .add("user", userJson);
-            usersBuild.add(accountBuild.build());
-        }
+                    .add("user", userJson)
+                    .build();
 
-        return usersBuild.build();
+            arrayBuilder.add(accountJson);
+        }
+        JsonArray array = arrayBuilder.build();
+        System.out.println(array);
+        return Response.status(200).entity(array).type(MediaType.APPLICATION_JSON).build();
     }
 
-    public JsonObject getUserWithCpr(String userCpr) {
+    public Response getUserWithCpr(String userCpr) {
         Account account = null;
+        System.out.println("sCpr: " + userCpr);
 
         for(Account temp_account: accounts.values()){
-            if (temp_account.getUser().getCprNumber().equals(userCpr))
+            if (temp_account.getUser().getCprNumber().equals(userCpr)) {
                 account = temp_account;
+                System.out.println("Found account");
+            }
         }
-        // todo make error message
+
         if (account == null){
-            return null;
+            System.out.println("Could not find account with that cprNumber");
+            throw new BadRequestException(Response.status(400).build());
         }
 
         JsonObjectBuilder userBuild = Json.createObjectBuilder()
@@ -86,55 +93,46 @@ public class AccountManager {
                 .add("bankAccountId", account.getBankAccountId())
                 .add("id", account.getId().toString())
                 .add("user", userJson);
-
-        return accountBuild.build();
+        System.out.println("Build account");
+        return Response.status(200).entity(accountBuild.build()).type(MediaType.APPLICATION_JSON).build();
     }
 
-    public String createUser(JsonObject jsonObject) {
-
+    public Response createUser(JsonObject jsonObject) {
+        System.out.println("Creating user");
         String type, bankAccountID, cpr, first, last;
-
+        JsonObject response;
         try {
+            System.out.println("Json");
             last = jsonObject.getJsonObject("user").getString("lastName");
-        } catch (NullPointerException e){
-            return "400 error: missing lastName";
-        }
-
-        try {
             first = jsonObject.getJsonObject("user").getString("firstName");
-        } catch (NullPointerException e){
-            return "400 error: missing firstName";
-        }
-
-        try {
             cpr = jsonObject.getJsonObject("user").getString("cprNumber");
-        } catch (NullPointerException e){
-            return "400 error: missing cprNumber";
-        }
-
-        try {
+            System.out.println("Cpr: " + cpr);
             bankAccountID = jsonObject.getString("bankAccountId");
-        } catch (NullPointerException e){
-            return "400 error: missing bankAccountId";
-        }
-
-        try {
             type = jsonObject.getString("type");
+            System.out.println("Put user into Json");
         } catch (NullPointerException e){
-            return "400 error: missing type";
+            response = Json.createObjectBuilder()
+                    .add("errorMessage", "Missing element(s)").build();
+            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
         }
-        Account account = new Account(type, bankAccountID,
-                new User(cpr, first, last));
-        accounts.put(account.getId().toString(), account);
-
-        return "user created";
+        Account createdAccount = new Account(type, bankAccountID, new User(cpr, first, last));
+        accounts.put(createdAccount.getId().toString(), createdAccount);
+        response = Json.createObjectBuilder().add("cprNumber", cpr).build();
+        System.out.println("User created");
+        return Response.status(201).entity(response).type(MediaType.APPLICATION_JSON).build();
     }
 
-    public String deleteAccount(String accountId) throws QueueException {
+    public Response deleteAccount(String accountId) throws QueueException {
+        Response response;
+        System.out.println("Started deleting");
         if(accounts.remove(accountId) != null) {
-            queueService.publishDeleteAccountEvent(accountId);
-            return "204";
+            //queueService.publishDeleteAccountEvent(accountId);
+            System.out.println("Found account and deleted it");
+            response = Response.status(204).build();
+        } else {
+            System.out.println("Found no account");
+            response = Response.status(404).build();
         }
-        return "404";
+        return response;
     }
 }
