@@ -36,12 +36,12 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     public QueueService(IEventSender eventSender) {
         this.eventSender = eventSender;
-        /*RabbitMqListener r = new RabbitMqListener(this);
+        RabbitMqListener r = new RabbitMqListener(this);
         try {
             r.listen(EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_CMD_BASE + "#");
         } catch (Exception e) {
             throw new Error(e);
-        }*/
+        }
     }
 
     @Override
