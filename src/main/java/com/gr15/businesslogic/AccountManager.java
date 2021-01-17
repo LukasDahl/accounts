@@ -117,7 +117,7 @@ public class AccountManager {
         }
         Account createdAccount = new Account(type, bankAccountID, new User(cpr, first, last));
         accounts.put(createdAccount.getId().toString(), createdAccount);
-        response = Json.createObjectBuilder().add("cprNumber", cpr).build();
+        response = Json.createObjectBuilder().add("id", createdAccount.getId().toString()).build();
         System.out.println("User created");
         return Response.status(201).entity(response).type(MediaType.APPLICATION_JSON).build();
     }
@@ -126,7 +126,7 @@ public class AccountManager {
         Response response;
         System.out.println("Started deleting");
         if(accounts.remove(accountId) != null) {
-            //queueService.publishDeleteAccountEvent(accountId);
+            queueService.publishDeleteAccountEvent(accountId);
             System.out.println("Found account and deleted it");
             response = Response.status(204).build();
         } else {
