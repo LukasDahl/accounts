@@ -1,5 +1,3 @@
-package com.gr15.cucumber;
-
 import io.cucumber.junit.platform.engine.Cucumber;
 
 /* Important:
