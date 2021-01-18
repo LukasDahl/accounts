@@ -20,8 +20,8 @@ public class AccountClient {
 
     public AccountClient() {
         Client client = ClientBuilder.newClient();
-        //baseUrl = client.target("http://localhost:8025/");
-        baseUrl = client.target("http://g-15.compute.dtu.dk:8025/");
+        baseUrl = client.target("http://localhost:8025/");
+        //baseUrl = client.target("http://g-15.compute.dtu.dk:8025/");
     }
 
     public String postAccount(JsonObject json) {
