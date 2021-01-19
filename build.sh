@@ -6,7 +6,7 @@ docker build -t accounts .
 
 docker-compose up -d --build
 
-sleep 10s
+sleep 20s
 
 mvn test
 
